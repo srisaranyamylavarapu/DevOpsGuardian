@@ -1,10 +1,14 @@
+from fastapi.responses import FileResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
 import os
 
-app = FastAPI()
+app = FastAPI() 
+@app.get("/")
+def serve_ui():
+    return FileResponse("index.html")
 
 app.add_middleware(
     CORSMiddleware,
