@@ -83,7 +83,7 @@ async function send() {
     output.innerHTML = "⏳ Analyzing...";
 
     try {
-        const res = await fetch("http://127.0.0.1:8000/analyze", {
+        const res = await fetch("https://devopsguardian.onrender.com/analyze", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
