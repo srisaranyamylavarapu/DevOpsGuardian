@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
 import os
+API_KEY = os.getenv("API_KEY")
 GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 app = FastAPI() 
@@ -26,7 +27,7 @@ class LogInput(BaseModel):
 
 
 # 🔹 Your OpenRouter API Key (PUT YOUR REAL KEY HERE)
-API_KEY = os.getenv("API_KEY")
+
 
 
 # 🔹 FIX AGENT (AI-powered)
@@ -57,14 +58,16 @@ def fix_agent(log):
         response = requests.post(url, headers=headers, json=data)
         result = response.json()
 
-        # Debug (optional)
         print("API Response:", result)
 
-        return result["choices"][0]["message"]["content"]
+        if "choices" in result and result["choices"]:
+            return result["choices"][0]["message"]["content"]
+
+        return "Unable to generate fix."
 
     except Exception as e:
         print("Error in fix_agent:", e)
-        return "Unable to generate fix. Check API key or API response."
+        return "Unable to generate fix."
 
 
 def create_github_issue(log, fix):
@@ -73,7 +76,7 @@ def create_github_issue(log, fix):
     REPO = "srin8n8-cloud/devops-guardian"
 
     headers = {
-        "Authorization": f"token {GITHUB_TOKEN1}",
+        "Authorization": f"token {GITHUB_TOKEN}",
         "Accept": "application/vnd.github+json"
     }
 
