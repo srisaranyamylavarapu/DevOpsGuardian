@@ -4,6 +4,7 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import requests
 import os
+GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")
 
 app = FastAPI() 
 @app.get("/")
@@ -101,7 +102,7 @@ def create_github_pr(log, fix):
     import time
     import base64
 
-    GITHUB_TOKEN = os.getenv("GITHUB_TOKEN")   
+       
     REPO = "srin8n8-cloud/devops-guardian"
 
     headers = {
