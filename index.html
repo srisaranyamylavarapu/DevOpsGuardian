@@ -98,19 +98,22 @@ async function send() {
         console.log(data);
 
         if (data.status === "success") {
-            output.innerHTML = `
+    output.innerHTML = `
         <b>🧠 Error Type:</b> ${data.error_type} <br><br>
-
         <b>🛠 Fix:</b><br>${data.fix} <br><br>
-
         <b>🔁 Attempts:</b> ${data.attempts} <br><br>
 
-        <a href="${data.github_issue}" target="_blank">🔗 View GitHub Issue</a><br>
-        <a href="${data.github_pr}" target="_blank">🚀 View GitHub PR</a>
-    `;        } else {
-            output.innerHTML = "❌ Failed to analyze error";
-        }
+        ${data.github_issue && data.github_issue.startsWith("http")
+            ? `<a href="${data.github_issue}" target="_blank">🐞 View GitHub Issue</a><br>`
+            : `<span>🐞 GitHub Issue: Not created</span><br>`}
 
+        ${data.github_pr && data.github_pr.startsWith("http")
+            ? `<a href="${data.github_pr}" target="_blank">🚀 View GitHub PR</a>`
+            : `<span>🚀 GitHub PR: Not created</span>`}
+    `;
+} else {
+    output.innerHTML = `❌ ${data.message || "Failed to analyze error"}`;
+}
     } catch (err) {
         output.innerHTML = "❌ Failed to connect backend";
     }
