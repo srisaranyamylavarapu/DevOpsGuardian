@@ -67,10 +67,12 @@ def fix_agent(log):
 
 
 def create_github_issue(log, fix):
-    url = "https://api.github.com/repos/srin8n8-cloud/devops-guardian/issues"
+    import requests
+
+    REPO = "srin8n8-cloud/devops-guardian"
 
     headers = {
-        "Authorization": os.getenv("GITHUB_TOKEN1"),
+        "Authorization": f"token {GITHUB_TOKEN1}",
         "Accept": "application/vnd.github+json"
     }
 
@@ -80,15 +82,19 @@ def create_github_issue(log, fix):
     }
 
     try:
-        response = requests.post(url, headers=headers, json=data)
+        response = requests.post(
+            f"https://api.github.com/repos/{REPO}/issues",
+            headers=headers,
+            json=data
+        )
 
-        print("GitHub Status:", response.status_code)
-        print("GitHub Response:", response.text)
+        print("Issue Status:", response.status_code)
+        print("Issue Response:", response.json())
 
         return response.json()
 
     except Exception as e:
-        print("GitHub Error:", e)
+        print("Issue Error:", e)
         return {}
 def create_github_pr(log, fix):
     import requests
