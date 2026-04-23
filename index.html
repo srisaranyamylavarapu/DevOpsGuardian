@@ -79,11 +79,10 @@ async function send() {
     const log = document.getElementById("log").value;
     const output = document.getElementById("output");
 
-    // 🔥 Loading state
     output.innerHTML = "⏳ Analyzing...";
 
     try {
-        const res = await fetch("https://devopsguardian-1.onrender.com", {
+        const res = await fetch("https://devopsguardian.onrender.com/analyze", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -95,27 +94,29 @@ async function send() {
         });
 
         const data = await res.json();
-        console.log(data);
+        console.log("API DATA:", data);
 
         if (data.status === "success") {
-    output.innerHTML = `
-        <b>🧠 Error Type:</b> ${data.error_type} <br><br>
-        <b>🛠 Fix:</b><br>${data.fix} <br><br>
-        <b>🔁 Attempts:</b> ${data.attempts} <br><br>
+            output.innerHTML = `
+                <b>🧠 Error Type:</b> ${data.error_type || "N/A"} <br><br>
+                <b>🛠 Fix:</b><br>${data.fix || "No fix returned"} <br><br>
+                <b>🔁 Attempts:</b> ${data.attempts || "N/A"} <br><br>
 
-        ${data.github_issue && data.github_issue.startsWith("http")
-            ? `<a href="${data.github_issue}" target="_blank">🐞 View GitHub Issue</a><br>`
-            : `<span>🐞 GitHub Issue: Not created</span><br>`}
+                ${data.github_issue && data.github_issue.startsWith("http")
+                    ? `<a href="${data.github_issue}" target="_blank">🐞 View GitHub Issue</a><br>`
+                    : `<span>🐞 GitHub Issue: Not created</span><br>`}
 
-        ${data.github_pr && data.github_pr.startsWith("http")
-            ? `<a href="${data.github_pr}" target="_blank">🚀 View GitHub PR</a>`
-            : `<span>🚀 GitHub PR: Not created</span>`}
-    `;
-} else {
-    output.innerHTML = `❌ ${data.message || "Failed to analyze error"}`;
-}
+                ${data.github_pr && data.github_pr.startsWith("http")
+                    ? `<a href="${data.github_pr}" target="_blank">🚀 View GitHub PR</a>`
+                    : `<span>🚀 GitHub PR: Not created</span>`}
+            `;
+        } else {
+            output.innerHTML = `❌ ${data.message || "Failed to analyze error"}`;
+        }
+
     } catch (err) {
-        output.innerHTML = "❌ Failed to connect backend";
+        console.log("FETCH ERROR:", err);
+        output.innerHTML = `❌ Failed to connect backend`;
     }
 }
 </script>
