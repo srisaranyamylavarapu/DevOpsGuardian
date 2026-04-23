@@ -81,9 +81,6 @@ ModuleNotFoundError: No module named numpy
 
 ---
 
-## 📸 Screenshot
-
-(Add your UI image here)
 
 ```md
 ![UI Screenshot](your-image-link)
@@ -93,7 +90,7 @@ ModuleNotFoundError: No module named numpy
 
 ## 🎥 Demo Video (Optional)
 
-(Add your video link)
+https://youtu.be/wyTnUu_0GAU?si=9w2BzPzmxppzD_IW
 
 ```md
 [Watch Demo](your-video-link)
