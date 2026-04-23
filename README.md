@@ -46,7 +46,7 @@ User Input → FastAPI Backend → AI (OpenRouter)
 
 ```bash
 # Clone repository
-git clone https://github.com/YOUR-USERNAME/DevOpsGuardian
+git clone https://github.com/srisaranyamylavarapu/DevOpsGuardian
 
 # Navigate into folder
 cd DevOpsGuardian
