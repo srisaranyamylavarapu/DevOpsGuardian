@@ -83,7 +83,7 @@ ModuleNotFoundError: No module named numpy
 
 
 ```md
-![UI Screenshot](your-image-link)
+
 ```
 
 ---
@@ -93,7 +93,6 @@ ModuleNotFoundError: No module named numpy
 https://youtu.be/wyTnUu_0GAU?si=9w2BzPzmxppzD_IW
 
 ```md
-[Watch Demo](your-video-link)
 ```
 
 ---
