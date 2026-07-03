@@ -83,7 +83,19 @@ ModuleNotFoundError: No module named numpy
 
 
 ```md
+2026-07-03T09:15:12Z INFO  Starting application...
+2026-07-03T09:15:13Z INFO  Connecting to PostgreSQL...
+2026-07-03T09:15:14Z ERROR connection refused: dial tcp 10.96.0.12:5432: connect: connection refused
+2026-07-03T09:15:14Z FATAL Failed to initialize database
+2026-07-03T09:15:15Z INFO  Exiting with status code 1
 
+kubectl describe pod payment-service
+
+State:          Waiting
+Reason:         CrashLoopBackOff
+Last State:     Terminated
+Exit Code:      1
+Restart Count:  9
 ```
 
 ---
