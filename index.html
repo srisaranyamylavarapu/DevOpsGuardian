@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html>
 <head>
@@ -14,6 +15,7 @@ body {
     align-items: center;
     height: 100vh;
 }
+
 .container {
     width: 450px;
     padding: 30px;
@@ -21,9 +23,11 @@ body {
     background: rgba(255,255,255,0.05);
     box-shadow: 0 0 20px rgba(0,0,0,0.5);
 }
+
 h1 {
     text-align: center;
 }
+
 textarea {
     width: 100%;
     height: 120px;
@@ -32,7 +36,9 @@ textarea {
     border: none;
     background: #020617;
     color: white;
+    resize: none;
 }
+
 button {
     width: 100%;
     padding: 12px;
@@ -44,82 +50,237 @@ button {
     font-size: 16px;
     cursor: pointer;
 }
+
 button:hover {
     background: #16a34a;
 }
+
 .result {
     margin-top: 20px;
     padding: 15px;
     background: #020617;
     border-radius: 10px;
+    word-wrap: break-word;
 }
-.link {
-    display: block;
-    margin-top: 10px;
+
+a {
     color: #38bdf8;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }
 </style>
+
 </head>
+
 
 <body>
 
 <div class="container">
-    <h1>🚀 DevOps Guardian</h1>
-    <p style="text-align:center;">AI-powered Error Fixer</p>
 
-    <textarea id="log" placeholder="Paste error here..."></textarea>
+<h1>🚀 DevOps Guardian</h1>
 
-    <button onclick="send()">Analyze</button>
+<p style="text-align:center;">
+AI-powered Error Fixer
+</p>
 
-    <div class="result" id="output">Result will appear here...</div>
+
+<textarea id="log" placeholder="Paste error here..."></textarea>
+
+
+<button onclick="send()">
+Analyze
+</button>
+
+
+<div class="result" id="output">
+Result will appear here...
 </div>
 
+
+</div>
+
+
 <script>
-async function send() {
+
+async function send(){
+
     const log = document.getElementById("log").value;
     const output = document.getElementById("output");
 
-    output.innerHTML = "⏳ Analyzing...";
 
-    try {
-        const res = await fetch("https://devopsguardian.onrender.com/analyze", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                log: log,
-                source: "frontend"
-            })
-        });
+    if(!log.trim()){
+        output.innerHTML = "⚠️ Please enter an error log";
+        return;
+    }
 
-        const data = await res.json();
-        console.log("API DATA:", data);
 
-        if (data.status === "success") {
+    output.innerHTML = "⏳ Analyzing error...";
+
+
+    try{
+
+
+        const response = await fetch(
+            "https://devopsguardian-1.onrender.com/analyze",
+            {
+                method:"POST",
+
+                headers:{
+                    "Content-Type":"application/json"
+                },
+
+                body:JSON.stringify({
+
+                    log:log,
+
+                    source:"frontend"
+
+                })
+
+            }
+        );
+
+
+        const data = await response.json();
+
+
+        console.log("BACKEND RESPONSE:",data);
+
+
+
+        if(data.status==="success"){
+
+
+            let issueLink = "";
+
+            let prLink = "";
+
+
+
+            // GitHub Issue handling
+
+            if(
+                data.github_issue &&
+                data.github_issue.includes("github.com")
+            ){
+
+                issueLink =
+                `<a href="${data.github_issue}" target="_blank">
+                🐞 View GitHub Issue
+                </a>`;
+
+            }
+
+            else{
+
+                issueLink =
+                "🐞 GitHub Issue: Not created";
+
+            }
+
+
+
+            // GitHub PR handling
+
+            if(
+                data.github_pr &&
+                data.github_pr.includes("github.com")
+            ){
+
+                prLink =
+                `<a href="${data.github_pr}" target="_blank">
+                🚀 View GitHub PR
+                </a>`;
+
+            }
+
+            else{
+
+                prLink =
+                "🚀 GitHub PR: Not created";
+
+            }
+
+
+
+
             output.innerHTML = `
-                <b>🧠 Error Type:</b> ${data.error_type || "N/A"} <br><br>
-                <b>🛠 Fix:</b><br>${data.fix || "No fix returned"} <br><br>
-                <b>🔁 Attempts:</b> ${data.attempts || "N/A"} <br><br>
 
-                ${data.github_issue && data.github_issue.startsWith("http")
-                    ? `<a href="${data.github_issue}" target="_blank">🐞 View GitHub Issue</a><br>`
-                    : `<span>🐞 GitHub Issue: Not created</span><br>`}
 
-                ${data.github_pr && data.github_pr.startsWith("http")
-                    ? `<a href="${data.github_pr}" target="_blank">🚀 View GitHub PR</a>`
-                    : `<span>🚀 GitHub PR: Not created</span>`}
+            <b>🧠 Error Type:</b>
+            ${data.error_type || "N/A"}
+
+            <br><br>
+
+
+            <b>🛠 Fix:</b>
+
+            <br>
+
+            ${data.fix || "No fix returned"}
+
+            <br><br>
+
+
+            <b>🔁 Attempts:</b>
+
+            ${data.attempts || "N/A"}
+
+            <br><br>
+
+
+            ${issueLink}
+
+            <br><br>
+
+
+            ${prLink}
+
+
             `;
-        } else {
-            output.innerHTML = `❌ ${data.message || "Failed to analyze error"}`;
+
+
         }
 
-    } catch (err) {
-        console.log("FETCH ERROR:", err);
-        output.innerHTML = `❌ Failed to connect backend`;
+
+        else{
+
+
+            output.innerHTML =
+            "❌ " + 
+            (data.message || "Analysis failed");
+
+
+        }
+
+
+
     }
+
+    catch(error){
+
+
+        console.error(
+            "FETCH ERROR:",
+            error
+        );
+
+
+        output.innerHTML =
+        "❌ Backend connection failed";
+
+
+    }
+
 }
+
+
 </script>
+
 
 </body>
 </html>
+```
